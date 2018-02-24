@@ -93,8 +93,8 @@ of its huge overhead.
 The program can calculate multiple frames simultaneously, so if you
 have a 1000-core CPU, you are in luck.
 
-Last but not least, you can use http://pypy.org[Pypy] to run the
+Last but not least, you can use http://pypy.org[PyPy] to run the
 program. On my laptop this provides a 5–10 fold improvement in speed.
 
-With all these optimizations, it takes ~10 seconds to run a 200 frame
+With all these optimizations, it takes ~10 seconds to run a 200-frame
 XYZ file with 567 waters in each frame on my quad-core i7 laptop.
