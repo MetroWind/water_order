@@ -64,13 +64,15 @@ mitigate that.
 The slowest part in the program is finding nearest neighbors. The
 naive way is to loop through all atoms, calculate distance, and take
 the smallest bunch. This procedure is applied to all atoms, so you get
-_N_² complexity.
+_N_² complexity. My implementation sorts the distances to find the
+smallest (as opposed to some linear algorithm, because I’m lazy) so
+it’s actually _N_²log(_N_).
 
 But of course this cannot possibly be the fastest algorithm. There
 exists the so-called https://en.wikipedia.org/wiki/K-d_tree[k-d tree]
 algorithm. It’s a tree, so nearest neighbor searching is log(_N_) in
 average. For all tetrahedrons you get __N__log(_N_). This method is
-not implemented, because I’m lazy.
+not implemented, again, because I’m lazy.
 
 Is this the fastest possible? Nope. You can make a grid out of the
 whole box, and make sure all grid cells are cubic and of the same
