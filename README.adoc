@@ -1,0 +1,98 @@
+= Order Parameter
+MetroWind <chris.corsair@gmail.com>
+:pp: ++
+
+Pure Python implementation to calculate the orientational tetrahedral
+order parameter. “Pure Python” means no numpy, because I don’t
+like it.
+
+== Dependencies
+
+Python 2 or 3. Nothing else. I only tested with Python 3.6 though.
+
+...
+
+BTW, ...
+
+Academia people, stop writing programs with shit ton of dependencies.
+It’s a *pain* to install weird libraries on a supercomputer! Write
+*better install scripts* / *use CMake*!!! And stop using ugly shit
+like Fortran and Tcl!
+
+Supercomputer people, get you shit together, update your Python
+interpreters and GCC/g{pp}. It’s a *pain* to not be able to
+write Python 2.7/3.6, C{pp}11/14/17/whatever! Provide updated
+version of CMake! Keep up with the industrial standard! ... (Actually
+maybe just give us good virtualization and let us install the tool
+chain by ourselves...)
+
+== Installation
+
+----
+git clone --recursive https://github.com/MetroWind/water_order.git
+----
+
+The main executable `order.py` can run directly inside the
+`order_param` directory.
+
+== Usage
+
+It supports reading PDB files and XYZ files. When using a PDB file, it
+treats the whole file as a single frame. You need to tell it the box
+size. When using a XYZ file, it gets the box size from the file, and
+calculate the order parameter for all tetrahedrons in each frame. In
+that case the box size and the number of atoms in each frame can be
+different.
+
+It supports taking a “shell” from each frame, and only consider the
+atoms inside the shell. A shell can be either of two things:
+
+* A cubic shell centered at the origin, with an inside size and an
+  outside size.
+* Given a type of atoms, take a cubic shell centered at each of them,
+  and take a union. For some reason this is the default case
+  :confused:, as opposed to taking all atoms. So if you don’t need a
+  shell, you need to use `-n`.
+
+Other than that, just take a look at the `-h` document.
+
+== Remarks on Performance
+
+Yes yes, it’s slow... But! There are measures built-in to sorta-kinda
+mitigate that.
+
+The slowest part in the program is finding nearest neighbors. The
+naive way is to loop through all atoms, calculate distance, and take
+the smallest bunch. This procedure is applied to all atoms, so you get
+_N_² complexity.
+
+But of course this cannot possibly be the fastest algorithm. There
+exists the so-called https://en.wikipedia.org/wiki/K-d_tree[k-d tree]
+algorithm. It’s a tree, so nearest neighbor searching is log(_N_) in
+average. For all tetrahedrons you get __N__log(_N_). This method is
+not implemented, because I’m lazy.
+
+Is this the fastest possible? Nope. You can make a grid out of the
+whole box, and make sure all grid cells are cubic and of the same
+size. Now when you need to find the neighbors at some location, all
+you need to do is to determine which grid cell that location is at,
+find all the grid cells around it, and only consider the atoms inside
+those cells. If the distribution of atoms is even, you get constant
+complexity (well it may be a huge constant but still...) for each
+tetrahedron, and linear overall.
+
+But _of course_ there is a catch. There’s always a catch with those
+linear algorithms. You need to carefully tune the size of your grid.
+If you are careless, you may as well end up with _N_² complexity. Also
+if the number of atoms in each frame is not very big, this is actually
+(at least for my implementation) slower than the naive method because
+of its huge overhead.
+
+The program can calculate multiple frames simultaneously, so if you
+have a 1000-core CPU, you are in luck.
+
+Last but not least, you can use http://pypy.org[Pypy] to run the
+program. On my laptop this provides a 5–10 fold improvement in speed.
+
+With all these optimizations, it takes ~10 seconds to run a 200 frame
+XYZ file with 567 waters in each frame.

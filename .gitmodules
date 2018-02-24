@@ -1,0 +1,3 @@
+[submodule "molmanip"]
+	path = molmanip
+	url = https://github.com/MetroWind/molmanip.git
