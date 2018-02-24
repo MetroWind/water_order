@@ -33,7 +33,7 @@ git clone --recursive https://github.com/MetroWind/water_order.git
 ----
 
 The main executable `order.py` can run directly inside the
-`order_param` directory.
+`water_order` directory.
 
 == Usage
 
@@ -65,8 +65,8 @@ The slowest part in the program is finding nearest neighbors. The
 naive way is to loop through all atoms, calculate distance, and take
 the smallest bunch. This procedure is applied to all atoms, so you get
 _N_² complexity. My implementation sorts the distances to find the
-smallest (as opposed to some linear algorithm, because I’m lazy) so
-it’s actually _N_²log(_N_).
+smallest (as opposed to using some linear algorithm, because I’m lazy)
+so it’s actually _N_²log(_N_).
 
 But of course this cannot possibly be the fastest algorithm. There
 exists the so-called https://en.wikipedia.org/wiki/K-d_tree[k-d tree]
