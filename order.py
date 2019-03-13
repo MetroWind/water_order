@@ -54,7 +54,7 @@ def findNearest(mole, loc, n, boundary,
     :type mole: molecule.Molecule
     :type loc: Vector3D
     :type n: int
-    :type boundary: molecule.Boundary
+    :type boundary: molecule.PeriodicBox
     :rtype: molecule.Atom
     """
 
@@ -74,7 +74,7 @@ def findNearest(mole, loc, n, boundary,
 class Gridifier(object):
     def __init__(self, bound, grid_size):
         """
-        :type bound: molecule.Boundary
+        :type bound: molecule.PeriodicBox
         :type grid_size: int
         """
         self.Boundary = bound
@@ -263,7 +263,7 @@ def splitBox(mole, bound, center, cutoff, atom_filter=lambda x: True):
     molecules. Distance is calculated with boundary condition `bound`.
 
     :type mole: molecule.Molecule
-    :type bound: molecule.Boundary
+    :type bound: molecule.PeriodicBox
     :type center: Matrix.Vector3D
     :type cutoff: tuple
     :rtype: tuple
@@ -530,7 +530,7 @@ def main():
         with open(Args.PDBPath, 'r') as f:
             Mol = molecule.Molecule.loadFromPDB(f)
 
-        Bound = molecule.Boundary().setWalls(
+        Bound = molecule.PeriodicBox().setWalls(
             Matrix.Vector3D(-BoxSize/2.0, -BoxSize/2.0, -BoxSize/2.0),
             Matrix.Vector3D(BoxSize/2.0, BoxSize/2.0, BoxSize/2.0))
 
